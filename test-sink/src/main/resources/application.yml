@@ -5,6 +5,7 @@ spring:
         input:
           destination: channel
           group: queue
+          content-type: application/json
           binder: local
       binders:
         local:
