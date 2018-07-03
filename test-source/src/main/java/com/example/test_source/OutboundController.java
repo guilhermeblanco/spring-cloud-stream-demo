@@ -1,5 +1,6 @@
 package com.example.test_source;
 
+import com.example.test_source.model.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.cloud.stream.annotation.EnableBinding;
@@ -28,16 +29,48 @@ public class OutboundController
     @ResponseBody
     public String send()
     {
-        final Model model = new Model();
-
-        model.message = "Test";
-
-        final Message<Model> message = MessageBuilder
-            .withPayload(model)
+        final EmailOutbound emailOutbound = this.createEmail();
+        final Message<EmailOutbound> message = MessageBuilder
+            .withPayload(emailOutbound)
             .build();
 
         this.output.send(message);
 
         return "success?";
+    }
+
+    private EmailOutbound createEmail()
+    {
+        final Email marryjane = Email.newBuilder("marry.jane@example.com")
+            .withName("Marry Jane")
+            .build();
+
+        final Email johndoe1 = Email.newBuilder("john.doe1@example.com")
+            .withName("Adriano Winck")
+            .build();
+
+        final Email johndoe2 = Email.newBuilder("john.doe2@example.com")
+            .withName("Mauren Berti")
+            .build();
+
+        final Content content = Content.newBuilder()
+            .withType("text/plain")
+            .withBody("Testing this thing!")
+            .build();
+
+        final Mail mail = Mail.newBuilder(marryjane)
+            .withReplyTo(marryjane)
+            .withSubject("Testing email delivery")
+            .addDestination(Destination.newBuilder()
+                .addTo(johndoe1)
+                .addTo(johndoe2)
+                .build()
+            )
+            .withContent(content)
+            .build();
+
+        return EmailOutbound.newBuilder("example")
+            .addMail(mail)
+            .build();
     }
 }
