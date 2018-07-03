@@ -1,0 +1,23 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: test-sink
+  labels:
+    service: test-sink
+spec:
+  replicas: 1
+  strategy:
+    type: RollingUpdate
+  template:
+    metadata:
+      labels:
+        service: test-sink
+    spec:
+      containers:
+      - name: test-sink
+        image: test-sink
+        imagePullPolicy: IfNotPresent
+        ports:
+        - name: java
+          containerPort: 8080
+          initialDelaySeconds: 30

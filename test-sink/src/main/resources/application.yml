@@ -1,0 +1,23 @@
+spring:
+  cloud:
+    stream:
+      bindings:
+        input:
+          destination: channel
+          group: queue
+          binder: local
+      binders:
+        local:
+          type: rabbit
+          environment:
+            spring:
+              rabbitmq:
+                host: "rabbitmq.vendor"
+                port: 5672
+                username: "guest"
+                password: "guest"
+                virtual-host: "/"
+                dynamic: true
+
+server:
+  port: 8080

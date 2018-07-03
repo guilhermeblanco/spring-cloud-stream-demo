@@ -1,0 +1,23 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: test-source
+  labels:
+    service: test-source
+spec:
+  replicas: 1
+  strategy:
+    type: RollingUpdate
+  template:
+    metadata:
+      labels:
+        service: test-source
+    spec:
+      containers:
+      - name: test-source
+        image: test-source
+        imagePullPolicy: IfNotPresent
+        ports:
+        - name: java
+          containerPort: 8080
+          initialDelaySeconds: 30
